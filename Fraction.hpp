@@ -72,6 +72,15 @@ struct FractionSqrt {
   using value = Sqrt_<A, x, iterations>;
 };
 
+template<typename A, unsigned int power>
+struct FractionPow {
+  using value = typename FractionMul<A, typename FractionPow<A, power - 1>::value>::value;
+};
+
+template<typename A>
+struct FractionPow<A, 0> {
+  using value = Fraction<1,1>;
+};
 
 
 #define FRACTION_HPP 
