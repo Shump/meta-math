@@ -5,62 +5,91 @@
 #include <string>
 #include <sstream>
 
+#include <type_traits>
+
 template<typename Frac>
 std::string frac2str() {
   std::stringstream ss;
-  ss << Frac::Nom << " / " << Frac::Denom << " (" << Frac::value() << ")";
+  ss << Frac::Nom << " / " << Frac::Denom << " [" << Frac::value() << "]";
   return ss.str();
 };
 
 template<typename frac1,
          typename frac2,
-         template<typename, typename> class Op>
+         template<typename, typename> class Op,
+         typename expected>
 struct BinaryTester {
   using result = typename Op<frac1, frac2>::value;
 
-  static void run(std::string test_name) {
-    std::cout << "Running: " << test_name << std::endl;
-    std::cout << result::Nom << " / " << result::Denom << " = " << result::value() << std::endl;
+  static_assert(FractionEqual<result, expected>::value, "Result is not equal expected value.");
+
+  static void run(std::string op_name) {
+    std::cout << frac2str<frac1>() << " " << op_name << " " << frac2str<frac2>() << " = " << frac2str<result>() << std::endl;
   };
 };
 
 void test_add() {
-  using a = Fraction<1,3>;
-  using b = Fraction<1,3>;
-  BinaryTester<a,b,FractionAdd>::run("Addition");
+  std::cout << "Addition tests:" << std::endl;
+
+  BinaryTester<Fraction<1,3>, Fraction<1,3>, FractionAdd, Fraction<2,3>>::run("+");
+  BinaryTester<Fraction<4,1>, Fraction<15,1>, FractionAdd, Fraction<19,1>>::run("+");
+  BinaryTester<Fraction<195,642>, Fraction<76,34>, FractionAdd, Fraction<195*34+76*642,642*34>>::run("+");
+
+  std::cout << std::endl;
 };
 
 void test_sub() {
-  using a = Fraction<2,3>;
-  using b = Fraction<1,3>;
-  BinaryTester<a,b,FractionSub>::run("Subtraction");
+  std::cout << "Subtraction tests:" << std::endl;
+
+  BinaryTester<Fraction<2,3>, Fraction<1,3>, FractionSub, Fraction<1,3>>::run("-");
+
+  std::cout << std::endl;
 };
 
 void test_div() {
-  using a = Fraction<1,3>;
-  using b = Fraction<3,1>;
-  BinaryTester<a,b,FractionDiv>::run("Division");
+  std::cout << "Division tests:" << std::endl;
+
+  BinaryTester<Fraction<1,3>, Fraction<3,1>, FractionDiv, Fraction<1,9>>::run("/");
+
+  std::cout << std::endl;
 }
 
 void test_mul() {
-  using a = Fraction<1,3>;
-  using b = Fraction<1,3>;
-  BinaryTester<a,b,FractionMul>::run("Multiplication");
+  std::cout << "Division tests:" << std::endl;
+
+  BinaryTester<Fraction<1,3>, Fraction<1,3>, FractionMul, Fraction<1,9>>::run("*");
+
+  std::cout << std::endl;
 };
 
 void test_pow() {
   using a = Fraction<2,1>;
-  using result = FractionPow<a, 3>::value;
+  using result = FractionPow<a, 2>::value;
+  std::cout << frac2str<a>() << " to the power of 2: ";
   std::cout << frac2str<result>() << std::endl;
 }
 
+template<int i>
+void temp() {
+  using a = Fraction<3,10>;
+  using result = typename FractionSqrt<a, i>::value;
+  std::cout << "sqrt of " << frac2str<a>() << ": ";
+  std::cout << frac2str<result>() << std::endl;
+};
+
+void test_sqrt() {
+  temp<3>();
+}
+
 int main() {
+  std::cout << std::endl;
   test_add();
   test_sub();
   test_mul();
   test_div();
 
   test_pow();
+  test_sqrt();
 }
 
 

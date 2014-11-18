@@ -32,7 +32,6 @@ template<typename A, typename B>
 struct FractionAdd {
   //TODO: simplify! Might case less instatiations.
   using value = Fraction<A::Nom * B::Denom + B::Nom * A::Denom, A::Denom * B::Denom>;
-
 };
 
 template<typename A, typename B>
@@ -42,7 +41,11 @@ struct FractionSub {
 
 template<typename A, typename B>
 struct FractionMul {
-  using value = Fraction<A::Nom * B::Nom, A::Denom * B::Denom>;
+  using value_type = typename A::value_type;
+  static const value_type Nom = A::Nom * B::Nom;
+  static const value_type Denom = A::Denom * B::Denom;
+  using f = Fraction<Nom, Denom>;
+  using value = Fraction<f::Nom, f::Denom>;
 };
 
 template<typename A, typename B>
@@ -80,6 +83,14 @@ struct FractionPow {
 template<typename A>
 struct FractionPow<A, 0> {
   using value = Fraction<1,1>;
+};
+
+template<typename A, typename B>
+struct FractionEqual {
+  using value_type = typename A::value_type;
+  static const value_type a_nom = A::Nom * B::Denom;
+  static const value_type b_nom = B::Nom * A::Denom;
+  static const bool value = a_nom == b_nom;
 };
 
 
