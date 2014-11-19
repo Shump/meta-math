@@ -2,9 +2,8 @@
 
 
 
-all:
-	clang++ -std=c++1y -stdlib=libc++ main.cpp
+all: tests
 
-temp:
-	clang++ -std=c++1y -stdlib=libc++ temp.cpp
+tests:
+	clang++ -std=c++1y -stdlib=libc++ ratio_test.cpp
 

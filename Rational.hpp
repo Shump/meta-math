@@ -1,8 +1,8 @@
-#ifndef FRACTION_HPP
+#ifndef RATIONAL_HPP
 
 #include <utility>
 
-namespace Fraction {
+namespace ratio {
 
 template<typename A, typename B>
 struct _SameNominator {
@@ -72,7 +72,7 @@ struct Value {
 
 template<typename A, bool simple> struct Absolute;
 template<typename A, typename B, bool simple> struct Sub;
-template<long long N, long long D, long long DENOM_LIMIT, long long PRECISION> struct Fraction;
+template<long long N, long long D, long long DENOM_LIMIT, long long PRECISION> struct Rational;
 
 template<typename A>
 struct Reduce {
@@ -116,7 +116,7 @@ struct Round<0, N, D, d_limit, prec> {
 };
 
 template<long long N, long long D, long long PRECISION = 100000, long long DENOM_LIMIT = 3037000499>
-struct Fraction {
+struct Rational {
 
   using value_type = long long;
 
@@ -143,14 +143,14 @@ struct Fraction {
 };
 
 template<char const* str>
-struct FractionString {
+struct RationalString {
   
 };
 
 template<typename A, typename B, bool simple = false>
 struct Add {
   //TODO: simplify! Might case less instatiations.
-  using value = Fraction<A::Nom * B::Denom + B::Nom * A::Denom, A::Denom * B::Denom>;
+  using value = Rational<A::Nom * B::Denom + B::Nom * A::Denom, A::Denom * B::Denom>;
 };
 
 template<typename A, typename B, bool simple = false>
@@ -160,7 +160,7 @@ struct Sub {
   static const value_type Denom = A::Denom * B::Denom;
   using value = typename std::conditional<simple,
         Value<Nom,Denom>,
-        Fraction<Nom, Denom>>::type;
+        Rational<Nom, Denom>>::type;
 };
 
 template<typename A, typename B, bool simple = false>
@@ -168,8 +168,8 @@ struct Mul {
   using value_type = typename A::value_type;
   static const value_type Nom = A::Nom * B::Nom;
   static const value_type Denom = A::Denom * B::Denom;
-  using f = Fraction<Nom, Denom>;
-  using value = Fraction<f::Nom, f::Denom>;
+  using f = Rational<Nom, Denom>;
+  using value = Rational<f::Nom, f::Denom>;
 };
 
 template<typename A, typename B, bool simple = false>
@@ -177,7 +177,7 @@ struct Div {
   using value_type = typename A::value_type;
   static const value_type Nom = A::Nom * B::Denom;
   static const value_type Denom = A::Denom * B::Nom;
-  using value = Fraction<Nom, Denom>;
+  using value = Rational<Nom, Denom>;
 };
 
 template<typename A>
@@ -193,14 +193,14 @@ struct Absolute {
   
   using value = typename std::conditional<simple,
         Value<Nom, Denom>,
-        Fraction<Nom, Denom>>::type;
+        Rational<Nom, Denom>>::type;
 };
 
 template<typename A, typename x, unsigned int iteration>
 struct Sqrt_ {
   using div = typename Div<A, x>::value;
   using add = typename Add<x, div>::value;
-  using x_ = typename Mul<Fraction<1,2>, add>::value;
+  using x_ = typename Mul<Rational<1,2>, add>::value;
   using value = typename Sqrt_<A, x_, iteration - 1>::value;
 };
 
@@ -211,7 +211,7 @@ struct Sqrt_<A, x, 0> {
 
 template<typename A, unsigned int iterations = 20>
 struct Sqrt {
-  using x = typename Div<A, Fraction<2,1>>::value;
+  using x = typename Div<A, Rational<2,1>>::value;
   using value = typename Sqrt_<A, x, iterations>::value;
 };
 
@@ -222,11 +222,11 @@ struct Pow {
 
 template<typename A>
 struct Pow<A, 0> {
-  using value = Fraction<1,1>;
+  using value = Rational<1,1>;
 };
 
 
 }
 
-#define FRACTION_HPP 
-#endif /* FRACTION_HPP */
+#define RATIONAL_HPP 
+#endif /* RATIONAL_HPP */

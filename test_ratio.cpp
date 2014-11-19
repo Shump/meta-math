@@ -1,5 +1,5 @@
 
-#include "Fraction.hpp"
+#include "Rational.hpp"
 
 #include <iostream>
 #include <string>
@@ -21,7 +21,7 @@ template<typename frac1,
 struct BinaryTester {
   using result = typename Op<frac1, frac2>::value;
 
-  static_assert(Fraction::Equal<result, expected>::value, "Result is not equal expected value.");
+  static_assert(ratio::Equal<result, expected>::value, "Result is not equal expected value.");
 
   static void run(std::string op_name) {
     std::cout << frac2str<frac1>() << " " << op_name << " " << frac2str<frac2>() << " = " << frac2str<result>() << std::endl;
@@ -46,9 +46,9 @@ struct CompareTester {
 void test_add() {
   std::cout << "Addition tests:" << std::endl;
 
-  BinaryTester<Fraction::Fraction<1,3>, Fraction::Fraction<1,3>, Fraction::Add, Fraction::Fraction<2,3>>::run("+");
-  BinaryTester<Fraction::Fraction<4,1>, Fraction::Fraction<15,1>, Fraction::Add, Fraction::Fraction<19,1>>::run("+");
-  BinaryTester<Fraction::Fraction<195,642>, Fraction::Fraction<76,34>, Fraction::Add, Fraction::Fraction<195*34+76*642,642*34>>::run("+");
+  BinaryTester<ratio::Rational<1,3>, ratio::Rational<1,3>, ratio::Add, ratio::Rational<2,3>>::run("+");
+  BinaryTester<ratio::Rational<4,1>, ratio::Rational<15,1>, ratio::Add, ratio::Rational<19,1>>::run("+");
+  BinaryTester<ratio::Rational<195,642>, ratio::Rational<76,34>, ratio::Add, ratio::Rational<195*34+76*642,642*34>>::run("+");
 
   std::cout << std::endl;
 };
@@ -56,7 +56,7 @@ void test_add() {
 void test_sub() {
   std::cout << "Subtraction tests:" << std::endl;
 
-  BinaryTester<Fraction::Fraction<2,3>, Fraction::Fraction<1,3>, Fraction::Sub, Fraction::Fraction<1,3>>::run("-");
+  BinaryTester<ratio::Rational<2,3>, ratio::Rational<1,3>, ratio::Sub, ratio::Rational<1,3>>::run("-");
 
   std::cout << std::endl;
 };
@@ -64,7 +64,7 @@ void test_sub() {
 void test_div() {
   std::cout << "Division tests:" << std::endl;
 
-  BinaryTester<Fraction::Fraction<1,3>, Fraction::Fraction<3,1>, Fraction::Div, Fraction::Fraction<1,9>>::run("/");
+  BinaryTester<ratio::Rational<1,3>, ratio::Rational<3,1>, ratio::Div, ratio::Rational<1,9>>::run("/");
 
   std::cout << std::endl;
 }
@@ -72,7 +72,7 @@ void test_div() {
 void test_mul() {
   std::cout << "Division tests:" << std::endl;
 
-  BinaryTester<Fraction::Fraction<1,3>, Fraction::Fraction<1,3>, Fraction::Mul, Fraction::Fraction<1,9>>::run("*");
+  BinaryTester<ratio::Rational<1,3>, ratio::Rational<1,3>, ratio::Mul, ratio::Rational<1,9>>::run("*");
 
   std::cout << std::endl;
 };
@@ -80,8 +80,8 @@ void test_mul() {
 void test_equal() {
   std::cout << "Equal tests:" << std::endl;
 
-  CompareTester<Fraction::Fraction<1,3>, Fraction::Fraction<2,6>, Fraction::Equal, true>::run("==");
-  CompareTester<Fraction::Fraction<2,5>, Fraction::Fraction<3,7>, Fraction::Equal, false>::run("==");
+  CompareTester<ratio::Rational<1,3>, ratio::Rational<2,6>, ratio::Equal, true>::run("==");
+  CompareTester<ratio::Rational<2,5>, ratio::Rational<3,7>, ratio::Equal, false>::run("==");
 
   std::cout << std::endl;
 }
@@ -89,27 +89,27 @@ void test_equal() {
 void test_not_equal() {
   std::cout << "Not equal tests:" << std::endl;
 
-  CompareTester<Fraction::Fraction<1,3>, Fraction::Fraction<2,6>, Fraction::NotEqual, false>::run("==");
-  CompareTester<Fraction::Fraction<2,5>, Fraction::Fraction<3,7>, Fraction::NotEqual, true>::run("==");
+  CompareTester<ratio::Rational<1,3>, ratio::Rational<2,6>, ratio::NotEqual, false>::run("==");
+  CompareTester<ratio::Rational<2,5>, ratio::Rational<3,7>, ratio::NotEqual, true>::run("==");
 
   std::cout << std::endl;
 }
 
 template<template<typename, typename> class Op, bool expected>
-using less = CompareTester<Fraction::Fraction<1,7>, Fraction::Fraction<1,6>, Op, expected>;
+using less = CompareTester<ratio::Rational<1,7>, ratio::Rational<1,6>, Op, expected>;
 
 template<template<typename, typename> class Op, bool expected>
-using equal = CompareTester<Fraction::Fraction<3,5>, Fraction::Fraction<15,25>, Op, expected>;
+using equal = CompareTester<ratio::Rational<3,5>, ratio::Rational<15,25>, Op, expected>;
 
 template<template<typename, typename> class Op, bool expected>
-using greater = CompareTester<Fraction::Fraction<2,3>, Fraction::Fraction<6,10>, Op, expected>;
+using greater = CompareTester<ratio::Rational<2,3>, ratio::Rational<6,10>, Op, expected>;
 
 void test_less() {
   std::cout << "Less than tests:" << std::endl;
 
-  less<Fraction::Less, true>::run("<");
-  equal<Fraction::Less, false>::run("<");
-  greater<Fraction::Less, false>::run("<");
+  less<ratio::Less, true>::run("<");
+  equal<ratio::Less, false>::run("<");
+  greater<ratio::Less, false>::run("<");
 
   std::cout << std::endl;
 }
@@ -117,9 +117,9 @@ void test_less() {
 void test_less_equal() {
   std::cout << "Less or equal than tests:" << std::endl;
 
-  less<Fraction::LessEq, true>::run("<=");
-  equal<Fraction::LessEq, true>::run("<=");
-  greater<Fraction::LessEq, false>::run("<=");
+  less<ratio::LessEq, true>::run("<=");
+  equal<ratio::LessEq, true>::run("<=");
+  greater<ratio::LessEq, false>::run("<=");
 
   std::cout << std::endl;
 }
@@ -127,9 +127,9 @@ void test_less_equal() {
 void test_greater() {
   std::cout << "Greater than tests:" << std::endl;
 
-  less<Fraction::Greater, false>::run(">");
-  equal<Fraction::Greater, false>::run(">");
-  greater<Fraction::Greater, true>::run(">");
+  less<ratio::Greater, false>::run(">");
+  equal<ratio::Greater, false>::run(">");
+  greater<ratio::Greater, true>::run(">");
 
   std::cout << std::endl;
 }
@@ -137,24 +137,24 @@ void test_greater() {
 void test_greater_equal() {
   std::cout << "Grater or equal than tests:" << std::endl;
 
-  less<Fraction::GreaterEq, false>::run(">=");
-  equal<Fraction::GreaterEq, true>::run(">=");
-  greater<Fraction::GreaterEq, true>::run(">=");
+  less<ratio::GreaterEq, false>::run(">=");
+  equal<ratio::GreaterEq, true>::run(">=");
+  greater<ratio::GreaterEq, true>::run(">=");
 
   std::cout << std::endl;
 }
 
 void test_pow() {
-  using a = Fraction::Fraction<2,1>;
-  using result = Fraction::Pow<a, 2>::value;
+  using a = ratio::Rational<2,1>;
+  using result = ratio::Pow<a, 2>::value;
   std::cout << frac2str<a>() << " to the power of 2: ";
   std::cout << frac2str<result>() << std::endl;
 }
 
 template<int i>
 void temp() {
-  using a = Fraction::Fraction<3,10>;
-  using result = typename Fraction::Sqrt<a, i>::value;
+  using a = ratio::Rational<3,10>;
+  using result = typename ratio::Sqrt<a, i>::value;
   std::cout << "sqrt of " << frac2str<a>() << ": ";
   std::cout << frac2str<result>() << std::endl;
 };
@@ -165,9 +165,9 @@ void test_sqrt() {
 
 template<typename frac, typename expected>
 struct AbsTester {
-  using result = typename Fraction::Absolute<frac>::value;
+  using result = typename ratio::Absolute<frac>::value;
 
-  static_assert(Fraction::Equal<result, expected>::value, "Incorrect absolute valie");
+  static_assert(ratio::Equal<result, expected>::value, "Incorrect absolute valie");
 
   static void run() {
     std::cout << "abs(" << frac2str<frac>() << ") = " << frac2str<result>() << std::endl;
@@ -177,10 +177,10 @@ struct AbsTester {
 void test_abs() {
   std::cout << "Absolute tests:" << std::endl;
 
-  AbsTester<Fraction::Fraction<3,7>, Fraction::Fraction<3,7>>::run();
-  AbsTester<Fraction::Fraction<-5,9>, Fraction::Fraction<5,9>>::run();
-  AbsTester<Fraction::Fraction<-13,-6>, Fraction::Fraction<13,6>>::run();
-  AbsTester<Fraction::Fraction<1,-25>, Fraction::Fraction<1,25>>::run();
+  AbsTester<ratio::Rational<3,7>, ratio::Rational<3,7>>::run();
+  AbsTester<ratio::Rational<-5,9>, ratio::Rational<5,9>>::run();
+  AbsTester<ratio::Rational<-13,-6>, ratio::Rational<13,6>>::run();
+  AbsTester<ratio::Rational<1,-25>, ratio::Rational<1,25>>::run();
 
   std::cout << std::endl;
 }
@@ -204,7 +204,7 @@ int main() {
 
   test_abs();
 
-  //std::cout << Fraction::tenth_pow(0) << std::endl;
+  //std::cout << ratio::tenth_pow(0) << std::endl;
 }
 
 
