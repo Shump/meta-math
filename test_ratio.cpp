@@ -194,8 +194,20 @@ void test_abs() {
   std::cout << std::endl;
 }
 
+void test_values() {
+  std::cout << "Rational values tests:" << std::endl;
+
+  std::cout << frac2str<ratio::Rational<0, 23456>>() << std::endl;
+
+  std::cout << std::endl;
+
+}
+
 int main() {
   std::cout << std::endl;
+
+  test_values();
+
   test_add();
   test_sub();
   test_mul();
@@ -203,6 +215,7 @@ int main() {
 
   test_equal();
   test_not_equal();
+
   test_less();
   test_less_equal();
   test_greater();
@@ -212,9 +225,6 @@ int main() {
   test_sqrt();
 
   test_abs();
-
-  //using q = ratio::Rational<7412097935276548, 370603178776909>;
-  //std::cout << frac2str<q>() << std::endl;
 
 }
 

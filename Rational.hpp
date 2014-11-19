@@ -143,6 +143,20 @@ struct Rational {
   };
 };
 
+template<long long D, long long PRECISION, long long DENOM_LIMIT>
+struct Rational<0, D, PRECISION, DENOM_LIMIT> {
+
+  using value_type = long long;
+
+  static const value_type Nom = 0;
+  static const value_type Denom = 1;
+
+  template<typename U = double>
+  static U value() {
+    return U(Nom) / U(Denom);
+  };
+};
+
 template<char const* str>
 struct RationalString {
   
