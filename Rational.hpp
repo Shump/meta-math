@@ -2,7 +2,11 @@
 
 #include <utility>
 
+namespace mmath {
 namespace ratio {
+
+
+namespace priv {
 
 template<typename A, typename B>
 struct _SameNominator {
@@ -249,7 +253,44 @@ struct Pow<A, 0> {
   using value = Rational<1,1>;
 };
 
+}
 
+template<long long N, long long D>
+using rational = priv::Rational<N, D>;
+
+template<typename A, typename B>
+using add = typename priv::Add<A, B>::value;
+template<typename A, typename B>
+using sub = typename priv::Sub<A, B>::value;
+template<typename A, typename B>
+using mul = typename priv::Mul<A, B>::value;
+template<typename A, typename B>
+using div = typename priv::Div<A, B>::value;
+
+template<typename A, typename B>
+using eq = typename priv::Equal<A,B>::value;
+template<typename A, typename B>
+using neq = typename priv::NotEqual<A,B>::value;
+
+template<typename A, typename B>
+using lt = typename priv::Less<A,B>::value;
+template<typename A, typename B>
+using le = typename priv::LessEq<A,B>::value;
+template<typename A, typename B>
+using gt = typename priv::Greater<A,B>::value;
+template<typename A, typename B>
+using ge = typename priv::GreaterEq<A,B>::value;
+
+template<typename A, unsigned int power>
+using pow = typename priv::Pow<A, power>::value;
+
+template<typename A>
+using sqrt = typename priv::Sqrt<A>::value;
+
+template<typename A>
+using abs = typename priv::Absolute<A>::value;
+
+}
 }
 
 #define RATIONAL_HPP 
