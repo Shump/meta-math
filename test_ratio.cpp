@@ -198,6 +198,14 @@ void test_values() {
   std::cout << "Rational values tests:" << std::endl;
 
   std::cout << frac2str<ratio::Rational<0, 23456>>() << std::endl;
+  std::cout << frac2str<ratio::Rational<-90, 195>>() << std::endl;
+  std::cout << frac2str<ratio::Rational<-1078, -63>>() << std::endl;
+  std::cout << frac2str<ratio::Rational<12, -2079>>() << std::endl;
+
+  std::cout << frac2str<ratio::Rational<1, 1>>() << std::endl;
+  std::cout << frac2str<ratio::Rational<-1, 1>>() << std::endl;
+  std::cout << frac2str<ratio::Rational<1, -1>>() << std::endl;
+  std::cout << frac2str<ratio::Rational<-1, -1>>() << std::endl;
 
   std::cout << std::endl;
 

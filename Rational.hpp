@@ -61,6 +61,14 @@ constexpr T gcd(T a, T b) {
   return (b == 0 ? a : gcd<T>(b, a % b));
 } 
 
+constexpr bool __neg__(long long n) {
+  return n < 0;
+}
+
+constexpr long long __abs__(long long n) {
+  return __neg__(n) ? -n : n;
+}
+
 template<long long NN, long long DD, typename T = long long>
 struct Value {
   
@@ -115,6 +123,10 @@ struct Round<0, N, D, d_limit, prec> {
         Value<N / factor,D / factor>>::type;
 };
 
+constexpr long long __fix_minus_nom__(long long n, long long d) {
+  return __neg__(n) != __neg__(d) ? -__abs__(n) : __abs__(n);
+}
+
 // Max long long value = 9223372036854775807
 template<long long N, long long D, long long PRECISION = 1000, long long DENOM_LIMIT = 20971>
 struct Rational {
@@ -125,6 +137,8 @@ struct Rational {
   static const value_type precision = PRECISION;
 
   using reduced = typename Reduce<Value<N,D>>::value;
+  //static const value_type short_n = __fix_minus_nom__(reduced::Nom, reduced::Denom);
+  //static const value_type short_d = __abs__(reduced::Denom);
   static const value_type short_n = reduced::Nom;
   static const value_type short_d = reduced::Denom;
 
@@ -155,11 +169,6 @@ struct Rational<0, D, PRECISION, DENOM_LIMIT> {
   static U value() {
     return U(Nom) / U(Denom);
   };
-};
-
-template<char const* str>
-struct RationalString {
-  
 };
 
 template<typename A, typename B, bool simple = false>
