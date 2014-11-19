@@ -5,5 +5,5 @@
 all: tests
 
 tests:
-	clang++ -std=c++1y -stdlib=libc++ ratio_test.cpp
+	clang++ -ftemplate-backtrace-limit=0 -std=c++1y -stdlib=libc++ test_ratio.cpp
 

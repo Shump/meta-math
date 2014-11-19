@@ -7,6 +7,8 @@
 
 #include <type_traits>
 
+#include <cmath>
+
 template<typename Frac>
 std::string frac2str() {
   std::stringstream ss;
@@ -151,16 +153,23 @@ void test_pow() {
   std::cout << frac2str<result>() << std::endl;
 }
 
-template<int i>
-void temp() {
-  using a = ratio::Rational<3,10>;
-  using result = typename ratio::Sqrt<a, i>::value;
-  std::cout << "sqrt of " << frac2str<a>() << ": ";
-  std::cout << frac2str<result>() << std::endl;
+template<long long N, long long D>
+void __sqrt__() {
+  using r = ratio::Rational<N,D>;
+  using result = typename ratio::Sqrt<r, 5>::value;
+  std::cout << "sqrt(" << frac2str<r>() << ") = ";
+  std::cout << frac2str<result>() << " \t(" << std::sqrt(double(N) / double(D)) << ")" << std::endl;
 };
 
 void test_sqrt() {
-  temp<3>();
+  std::cout << "Squareroot tests:" << std::endl;
+
+  __sqrt__<100,1>();
+  __sqrt__<3,1>();
+  __sqrt__<1,3>();
+  __sqrt__<3,25>();
+
+  std::cout << std::endl;
 }
 
 template<typename frac, typename expected>
@@ -204,7 +213,9 @@ int main() {
 
   test_abs();
 
-  //std::cout << ratio::tenth_pow(0) << std::endl;
+  //using q = ratio::Rational<7412097935276548, 370603178776909>;
+  //std::cout << frac2str<q>() << std::endl;
+
 }
 
 

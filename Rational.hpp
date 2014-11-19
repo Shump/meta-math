@@ -115,7 +115,8 @@ struct Round<0, N, D, d_limit, prec> {
         Value<N / factor,D / factor>>::type;
 };
 
-template<long long N, long long D, long long PRECISION = 100000, long long DENOM_LIMIT = 3037000499>
+// Max long long value = 9223372036854775807
+template<long long N, long long D, long long PRECISION = 1000, long long DENOM_LIMIT = 20971>
 struct Rational {
 
   using value_type = long long;
