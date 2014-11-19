@@ -61,25 +61,61 @@ constexpr T gcd(T a, T b) {
   return (b == 0 ? a : gcd<T>(b, a % b));
 } 
 
-template<long long NN, long long DD>
+template<long long NN, long long DD, typename T = long long>
 struct Value {
+  
+  using value_type = T;
+
   static const long long Nom = NN;
   static const long long Denom = DD;    
 };
 
-template<typename A> struct Absolute;
+template<typename A, bool simple> struct Absolute;
+template<typename A, typename B, bool simple> struct Sub;
+template<long long N, long long D, long long DENOM_LIMIT, long long PRECISION> struct Fraction;
+
+template<typename A>
+struct Reduce {
+  using value_type = typename A::value_type;
+
+  static const value_type GCD = gcd<value_type>(A::Nom, A::Denom);
+
+  using value = Value<A::Nom / GCD, A::Denom / GCD>;
+};
 
 template<unsigned int i, long long N, long long D, long long d_limit, long long prec>
 struct Round {
+  static const long long N_ = N / tenth_pow(i);
+  static const long long D_ = (N_ == 0 ?  1 : D / tenth_pow(i));
 
+  using rounded = Value<N_,D_>;
+  using old = Value<N, D>;
+
+  using diff = typename Sub<rounded, old, true>::value;
+  using abs = typename Absolute<diff, true>::value;
+
+  using sigma = Value<1,prec>;
+
+  static const bool acceptable = Less<abs, sigma>::value;
+
+  using value = typename std::conditional<acceptable, 
+        typename Reduce<Value<N_, D_>>::value,
+        typename Round<i - 1, N, D, d_limit, prec>::value>::type;
 };
 
 template<long long N, long long D, long long d_limit, long long prec>
 struct Round<0, N, D, d_limit, prec> {
-  using value = Value<N,D>;
+  static const long long comp = 1; // Compensation for integer div.
+  static const long long factor = D / d_limit + comp;
+
+  static const long long Nom = N / factor;
+  static const long long Denom = D / factor;
+  using value = typename std::conditional<Nom == 0,
+        Value<0,1>,
+        Value<N / factor,D / factor>>::type;
 };
 
-template<long long N, long long D, long long DENOM_LIMIT = 3037000499, long long PRECISION = 1000>
+template<long long N, long long D, long long PRECISION = 100000, long long DENOM_LIMIT = 3037000499>
 struct Fraction {
 
   using value_type = long long;
@@ -87,18 +123,15 @@ struct Fraction {
   static const value_type denom_limit = DENOM_LIMIT;
   static const value_type precision = PRECISION;
 
-
-  static const value_type GCD = gcd<value_type>(N, D);
-  static const value_type short_n = N / GCD;
-  static const value_type short_d = D / GCD;
-
+  using reduced = typename Reduce<Value<N,D>>::value;
+  static const value_type short_n = reduced::Nom;
+  static const value_type short_d = reduced::Denom;
 
   static const bool should_short = short_d > denom_limit;
   static const unsigned int start = should_short ? integer_length(short_d) - 1 : 0;
-  using temp_value = typename std::conditional<should_short, 
+  using temp_value = typename std::conditional<true, 
         typename Round<start, short_n, short_d, denom_limit, precision>::value,
         Value<short_n, short_d>>::type;
-
 
   static const value_type Nom = temp_value::Nom;
   static const value_type Denom = temp_value::Denom;
@@ -114,18 +147,23 @@ struct FractionString {
   
 };
 
-template<typename A, typename B>
+template<typename A, typename B, bool simple = false>
 struct Add {
   //TODO: simplify! Might case less instatiations.
   using value = Fraction<A::Nom * B::Denom + B::Nom * A::Denom, A::Denom * B::Denom>;
 };
 
-template<typename A, typename B>
+template<typename A, typename B, bool simple = false>
 struct Sub {
-  using value = Fraction<A::Nom * B::Denom - B::Nom * A::Denom, A::Denom * B::Denom>;
+  using value_type = typename A::value_type;
+  static const value_type Nom = A::Nom * B::Denom - B::Nom * A::Denom;
+  static const value_type Denom = A::Denom * B::Denom;
+  using value = typename std::conditional<simple,
+        Value<Nom,Denom>,
+        Fraction<Nom, Denom>>::type;
 };
 
-template<typename A, typename B>
+template<typename A, typename B, bool simple = false>
 struct Mul {
   using value_type = typename A::value_type;
   static const value_type Nom = A::Nom * B::Nom;
@@ -134,7 +172,7 @@ struct Mul {
   using value = Fraction<f::Nom, f::Denom>;
 };
 
-template<typename A, typename B>
+template<typename A, typename B, bool simple = false>
 struct Div {
   using value_type = typename A::value_type;
   static const value_type Nom = A::Nom * B::Denom;
@@ -147,13 +185,15 @@ struct Negate {
 
 };
 
-template<typename A>
+template<typename A, bool simple = false>
 struct Absolute {
   using value_type = typename A::value_type;
   static const value_type Nom = A::Nom < 0 ? -A::Nom : A::Nom;
   static const value_type Denom = A::Denom < 0 ? -A::Denom : A::Denom;
   
-  using value = Fraction<Nom, Denom>;
+  using value = typename std::conditional<simple,
+        Value<Nom, Denom>,
+        Fraction<Nom, Denom>>::type;
 };
 
 template<typename A, typename x, unsigned int iteration>

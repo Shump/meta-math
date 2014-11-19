@@ -16,7 +16,7 @@ std::string frac2str() {
 
 template<typename frac1,
          typename frac2,
-         template<typename, typename> class Op,
+         template<typename, typename, bool b = false> class Op,
          typename expected>
 struct BinaryTester {
   using result = typename Op<frac1, frac2>::value;
@@ -163,6 +163,28 @@ void test_sqrt() {
   temp<3>();
 }
 
+template<typename frac, typename expected>
+struct AbsTester {
+  using result = typename Fraction::Absolute<frac>::value;
+
+  static_assert(Fraction::Equal<result, expected>::value, "Incorrect absolute valie");
+
+  static void run() {
+    std::cout << "abs(" << frac2str<frac>() << ") = " << frac2str<result>() << std::endl;
+  };
+};
+
+void test_abs() {
+  std::cout << "Absolute tests:" << std::endl;
+
+  AbsTester<Fraction::Fraction<3,7>, Fraction::Fraction<3,7>>::run();
+  AbsTester<Fraction::Fraction<-5,9>, Fraction::Fraction<5,9>>::run();
+  AbsTester<Fraction::Fraction<-13,-6>, Fraction::Fraction<13,6>>::run();
+  AbsTester<Fraction::Fraction<1,-25>, Fraction::Fraction<1,25>>::run();
+
+  std::cout << std::endl;
+}
+
 int main() {
   std::cout << std::endl;
   test_add();
@@ -179,6 +201,8 @@ int main() {
 
   test_pow();
   test_sqrt();
+
+  test_abs();
 
   //std::cout << Fraction::tenth_pow(0) << std::endl;
 }
