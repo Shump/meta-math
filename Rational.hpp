@@ -268,18 +268,18 @@ template<typename A, typename B>
 using div = typename priv::Div<A, B>::value;
 
 template<typename A, typename B>
-using eq = typename priv::Equal<A,B>::value;
+static const bool eq = priv::Equal<A,B>::value;
 template<typename A, typename B>
-using neq = typename priv::NotEqual<A,B>::value;
+static const bool neq = priv::NotEqual<A,B>::value;
 
 template<typename A, typename B>
-using lt = typename priv::Less<A,B>::value;
+static const bool lt = priv::Less<A,B>::value;
 template<typename A, typename B>
-using le = typename priv::LessEq<A,B>::value;
+static const bool le = priv::LessEq<A,B>::value;
 template<typename A, typename B>
-using gt = typename priv::Greater<A,B>::value;
+static const bool gt = priv::Greater<A,B>::value;
 template<typename A, typename B>
-using ge = typename priv::GreaterEq<A,B>::value;
+static const bool ge = priv::GreaterEq<A,B>::value;
 
 template<typename A, unsigned int power>
 using pow = typename priv::Pow<A, power>::value;
