@@ -46,7 +46,14 @@ struct Div {
 
 template<typename A, typename B>
 struct Equal {
-  static const bool value = ratio::eq<typename A::x, typename B::x>;
+  static const bool value = ratio::eq<typename A::x, typename B::x>::value && 
+                            ratio::eq<typename A::y, typename B::y>::value && 
+                            ratio::eq<typename A::z, typename B::z>::value;
+};
+
+template<typename A, typename B>
+struct NotEqual {
+  static const bool value = !Equal<A,B>::value;
 };
 
 }
@@ -62,6 +69,11 @@ template<typename A, typename B>
 using mul = typename priv::Mul<A, B>::value;
 template<typename A, typename B>
 using div = typename priv::Div<A, B>::value;
+
+template<typename A, typename B>
+using eq = priv::Equal<A, B>;
+template<typename A, typename B>
+using neq = priv::NotEqual<A, B>;
 
 }
 }

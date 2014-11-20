@@ -56,6 +56,24 @@ struct test_suit {
 
 };
 
+void test_eq() {
+  std::cout << "Equal tests:" << std::endl;
+
+  std::cout << vec::eq<ones, vec::div<threes, threes>>::value << std::endl;
+  std::cout << vec::eq<ones, threes>::value << std::endl;
+
+  std::cout << std::endl;
+}
+
+void test_neq() {
+  std::cout << "Not equal tests:" << std::endl;
+
+  std::cout << vec::neq<ones, vec::div<threes, threes>>::value << std::endl;
+  std::cout << vec::neq<ones, threes>::value << std::endl;
+
+  std::cout << std::endl;
+}
+
 int main() {
   std::cout << std::endl;
 
@@ -63,6 +81,9 @@ int main() {
   test_suit<vec::sub>::run("Subtraction", "-");
   test_suit<vec::mul>::run("Multiplication", "*");
   test_suit<vec::div>::run("Divistion", "/");
+
+  test_eq();
+  test_neq();
 
 }
 
