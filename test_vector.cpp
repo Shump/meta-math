@@ -6,7 +6,17 @@
 #include <sstream>
 #include <string>
 
+#include <type_traits>
+
 using namespace mmath;
+
+template<typename T>
+typename std::enable_if<std::is_same<T, ratio::rational<T::Nom, T::Denom>>::value, std::string>::type 
+to_string() {
+  std::stringstream ss;
+  ss << T::Nom << " / " << T::Denom << " [" << T::value() << "]";
+  return ss.str();
+};
 
 template<typename v>
 std::string vec2str() {
@@ -17,10 +27,15 @@ std::string vec2str() {
 };
 
 using one_tenth = ratio::rational<1,10>;
+using zero = ratio::rational<0,1>;
 using one = ratio::rational<1,1>;
 using two = ratio::rational<2,1>;
 using three = ratio::rational<3,1>;
 using four = ratio::rational<4,1>;
+
+using x_unit = vec::vector<one, zero, zero>;
+using y_unit = vec::vector<zero, one, zero>;
+using z_unit = vec::vector<zero, zero, one>;
 
 using one_tenths = vec::vector<one_tenth, one_tenth, one_tenth>;
 using one_two_three = vec::vector<one, two, three>;
@@ -74,6 +89,18 @@ void test_neq() {
   std::cout << std::endl;
 }
 
+void test_length() {
+  std::cout << "Length tests:" << std::endl;
+
+  std::cout << to_string<vec::len<x_unit>>() << std::endl;
+  std::cout << to_string<vec::len<y_unit>>() << std::endl;
+  std::cout << to_string<vec::len<z_unit>>() << std::endl;
+
+  std::cout << to_string<vec::len<ones>>() << std::endl;
+
+  std::cout << std::endl;
+}
+
 int main() {
   std::cout << std::endl;
 
@@ -84,6 +111,8 @@ int main() {
 
   test_eq();
   test_neq();
+
+  test_length();
 
 }
 

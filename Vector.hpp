@@ -56,6 +56,19 @@ struct NotEqual {
   static const bool value = !Equal<A,B>::value;
 };
 
+template<typename A, typename B>
+struct Dot {
+  using x_ = typename ratio::mul<typename A::x, typename B::x>;
+  using y_ = typename ratio::mul<typename A::y, typename B::y>;
+  using z_ = typename ratio::mul<typename A::z, typename B::z>;
+  using value = typename ratio::add<typename ratio::add<x_, y_>, z_>;
+};
+
+template<typename A>
+struct Length {
+  using value = typename ratio::sqrt<typename Dot<A, A>::value>;
+};
+
 }
 
 template<typename X, typename Y, typename Z>
@@ -74,6 +87,12 @@ template<typename A, typename B>
 using eq = priv::Equal<A, B>;
 template<typename A, typename B>
 using neq = priv::NotEqual<A, B>;
+
+template<typename A, typename B>
+using dot = typename priv::Dot<A, B>::value;
+
+template<typename A>
+using len = typename priv::Length<A>::value;
 
 }
 }
