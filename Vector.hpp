@@ -66,6 +66,20 @@ struct Dot {
   using value = typename ratio::add<typename ratio::add<x_, y_>, z_>;
 };
 
+template<typename A, typename B>
+struct Cross {
+  using x_ = ratio::sub<ratio::mul<typename A::y, typename B::z>, 
+                        ratio::mul<typename A::z, typename B::y>>;
+
+  using y_ = ratio::sub<ratio::mul<typename A::z, typename B::x>, 
+                        ratio::mul<typename A::x, typename B::z>>;
+
+  using z_ = ratio::sub<ratio::mul<typename A::x, typename B::y>, 
+                        ratio::mul<typename A::y, typename B::x>>;
+
+  using value = Vector<x_, y_, z_>;
+};
+
 template<typename A>
 struct Length {
   using value = typename ratio::sqrt<typename Dot<A, A>::value>;
@@ -92,6 +106,8 @@ using neq = priv::NotEqual<A, B>;
 
 template<typename A, typename B>
 using dot = typename priv::Dot<A, B>::value;
+template<typename A, typename B>
+using cross = typename priv::Cross<A, B>::value;
 
 template<typename A>
 using len = typename priv::Length<A>::value;

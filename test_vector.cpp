@@ -85,6 +85,14 @@ void test_length() {
   std::cout << std::endl;
 }
 
+void test_cross() {
+  std::cout << "Cross product tests:" << std::endl;
+
+  std::cout << to_string<vec::cross<x_unit, y_unit>>() << std::endl;
+
+  std::cout << std::endl;
+}
+
 int main() {
   std::cout << std::endl;
 
@@ -98,6 +106,7 @@ int main() {
 
   test_length();
 
+  test_cross();
 }
 
 
