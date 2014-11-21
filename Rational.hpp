@@ -1,5 +1,6 @@
 #ifndef RATIONAL_HPP
 
+#include <sstream>
 #include <utility>
 
 namespace mmath {
@@ -290,7 +291,19 @@ using sqrt = typename priv::Sqrt<A>::value;
 template<typename A>
 using abs = typename priv::Absolute<A>::value;
 
+
+
 }
+
+template<typename T>
+typename std::enable_if<std::is_same<T, ratio::rational<T::Nom, T::Denom>>::value, std::string>::type 
+to_string() {
+  std::stringstream ss;
+  ss << T::Nom << " / " << T::Denom << " [" << T::value() << "]";
+  return ss.str();
+};
+
+
 }
 
 #define RATIONAL_HPP 

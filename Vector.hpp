@@ -3,6 +3,8 @@
 
 #include "Rational.hpp"
 
+#include <sstream>
+
 namespace mmath {
 namespace vec {
 
@@ -95,6 +97,16 @@ template<typename A>
 using len = typename priv::Length<A>::value;
 
 }
+
+template<typename T>
+typename std::enable_if< std::is_same<T, vec::vector<typename T::x, typename T::y, typename T::z>>::value, std::string>::type 
+to_string() {
+  std::stringstream ss;
+  ss << "[ " << T::x::value() << ", " << T::y::value() << ", " << T::z::value() << " ]";
+  return ss.str();
+}
+
+
 }
 
 #endif /* VECTOR_HPP */

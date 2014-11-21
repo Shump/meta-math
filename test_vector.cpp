@@ -10,22 +10,6 @@
 
 using namespace mmath;
 
-template<typename T>
-typename std::enable_if<std::is_same<T, ratio::rational<T::Nom, T::Denom>>::value, std::string>::type 
-to_string() {
-  std::stringstream ss;
-  ss << T::Nom << " / " << T::Denom << " [" << T::value() << "]";
-  return ss.str();
-};
-
-template<typename v>
-std::string vec2str() {
-  std::stringstream ss;
-  ss << "[ " << v::x::value() << ", " << v::y::value() << ", " << v::z::value() << " ]";
-  
-  return ss.str();
-};
-
 using one_tenth = ratio::rational<1,10>;
 using zero = ratio::rational<0,1>;
 using one = ratio::rational<1,1>;
@@ -46,8 +30,8 @@ using threes = vec::vector<three, three, three>;
 
 template<typename A, typename B, template<typename, typename> class Op>
 void tester(std::string op_char) {
-  std::cout << vec2str<A>() << " " << op_char << " " << vec2str<B>() << " = "
-    << vec2str<Op<A,B>>() << std::endl;
+  std::cout << to_string<A>() << " " << op_char << " " << to_string<B>() << " = "
+    << to_string<Op<A,B>>() << std::endl;
 }
 
 template<template<typename,typename> class Op>
