@@ -50,6 +50,13 @@ struct test_suit {
     tester<one_two_three, three_two_one, Op>(op_char);
     tester<three_two_one, one_two_three, Op>(op_char);
 
+    tester<ones, three, Op>(op_char);
+    // tester<three, ones, Op>(op_char);
+    tester<twos, three, Op>(op_char);
+    // tester<three, twos, Op>(op_char);
+    tester<one_tenths, four, Op>(op_char);
+    // tester<four, one_tenths, Op>(op_char);
+
     std::cout << std::endl;
   }
 

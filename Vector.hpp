@@ -26,9 +26,28 @@ struct __BinOp__ {
   using value = Vector<x_, y_, z_>;
 };
 
+template<typename V, typename S, template<typename,typename> class Op>
+struct __ScalarBinOp__ {
+  using x_ = Op<typename V::x, S>;
+  using y_ = Op<typename V::y, S>;
+  using z_ = Op<typename V::z, S>;
+
+  using value = Vector<x_, y_, z_>;
+};
+
 template<typename A, typename B>
 struct Add {
   using value = typename __BinOp__<A, B, ratio::add>::value;
+};
+
+template<typename A, long long N, long long D>
+struct Add<A, mmath::ratio::rational<N, D>> {
+  using value = typename __ScalarBinOp__<A, ratio::rational<N, D>, ratio::add>::value;
+};
+
+template<typename A, long long N, long long D>
+struct Add<mmath::ratio::rational<N, D>, A> {
+  using value = typename __ScalarBinOp__<A, ratio::rational<N, D>, ratio::add>::value;
 };
 
 template<typename A, typename B>
@@ -36,15 +55,45 @@ struct Sub {
   using value = typename __BinOp__<A, B, ratio::sub>::value;
 };
 
+template<typename A, long long N, long long D>
+struct Sub<A, mmath::ratio::rational<N, D>> {
+  using value = typename __ScalarBinOp__<A, ratio::rational<N, D>, ratio::sub>::value;
+};
+
+//template<typename A, long long N, long long D>
+//struct Sub<mmath::ratio::rational<N, D>, A> {
+//  using value = typename __ScalarBinOp__<A, ratio::rational<N, D>, ratio::sub>::value;
+//};
+
 template<typename A, typename B>
 struct Mul {
   using value = typename __BinOp__<A, B, ratio::mul>::value;
+};
+
+template<typename A, long long N, long long D>
+struct Mul<A, mmath::ratio::rational<N, D>> {
+  using value = typename __ScalarBinOp__<A, ratio::rational<N, D>, ratio::mul>::value;
+};
+
+template<typename A, long long N, long long D>
+struct Mul<mmath::ratio::rational<N, D>, A> {
+  using value = typename __ScalarBinOp__<A, ratio::rational<N, D>, ratio::mul>::value;
 };
 
 template<typename A, typename B>
 struct Div {
   using value = typename __BinOp__<A, B, ratio::div>::value;
 };
+
+template<typename A, long long N, long long D>
+struct Div<A, mmath::ratio::rational<N, D>> {
+  using value = typename __ScalarBinOp__<A, ratio::rational<N, D>, ratio::div>::value;
+};
+
+//template<typename A, long long N, long long D>
+//struct Div<mmath::ratio::rational<N, D>, A> {
+//  using value = typename __ScalarBinOp__<A, ratio::rational<N, D>, ratio::div>::value;
+//};
 
 template<typename A, typename B>
 struct Equal {
